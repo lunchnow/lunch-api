@@ -1,5 +1,8 @@
 // Helpers
 const axios = require('axios');
+const fs = require('fs');
+const YAML = require('yaml');
+const _ = require('lodash');
 
 // DB
 const low = require('lowdb');
@@ -11,6 +14,7 @@ const fastify = require('fastify')({
 });
 
 const postInSlack = (lunches) => {
+  const webhookUrl = 'https://hooks.slack.com/services/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';
   let msg = [];
   lunches.forEach(lunch => {
     msg.push(`${lunch.username} chce iść do ${lunch.place} o godzinie ${lunch.time}`);
@@ -29,9 +33,10 @@ const adapter = new FileAsync('db.json');
 low(adapter)
   .then(db => {
     fastify.get('/places', (request, reply) => {
-      const places = db.get('lunches').map('place').uniq().value();
+      const places = YAML.parse(fs.readFileSync('./places.yml', 'utf8')).places;
+      const dbPlaces = db.get('lunches').map('place').value();
 
-      reply.send({ places });
+      reply.send({ places: _.uniq(_.concat(places, dbPlaces)) });
     })
 
     fastify.get('/lunches', (request, reply) => {
