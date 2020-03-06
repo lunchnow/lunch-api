@@ -4,6 +4,8 @@ const fs = require('fs');
 const YAML = require('yaml');
 const _ = require('lodash');
 
+const messageFormatter = require('./lib/messageFormatter');
+
 // DB
 const low = require('lowdb');
 const FileAsync = require('lowdb/adapters/FileAsync');
@@ -14,14 +16,8 @@ const fastify = require('fastify')({
 });
 
 const postInSlack = (lunches) => {
-  const webhookUrl = 'https://hooks.slack.com/services/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';
-  let msg = [];
-  lunches.forEach(lunch => {
-    msg.push(`${lunch.username} chce iść do ${lunch.place} o godzinie ${lunch.time}`);
-  });
-
-  axios.post(webhookUrl, { text: msg.join("\n") })
-    .then(response => console.log(response.body))
+  axios.post(process.env.SLACK_WEBHOOK_URL, { text: messageFormatter.forSlack(lunches) })
+    .then(response => console.log(response.status))
     .catch(console.log)
 
   return new Promise((resolve, reject) => {
