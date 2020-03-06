@@ -25,7 +25,7 @@ const postInSlack = (lunches) => {
   });
 };
 
-const adapter = new FileAsync('db.json');
+const adapter = new FileAsync('./db.json');
 low(adapter)
   .then(db => {
     fastify.get('/places', (request, reply) => {
