@@ -1,0 +1,29 @@
+{
+  "name": "lunch-api",
+  "version": "0.0.1",
+  "description": "API for LunchNow app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lunchnow/lunch-api.git"
+  },
+  "keywords": [
+    "lunch",
+    "slack",
+    "api"
+  ],
+  "author": "lunchnow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lunchnow/lunch-api/issues"
+  },
+  "homepage": "https://github.com/lunchnow/lunch-api#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "fastify": "^2.12.1",
+    "lowdb": "^1.0.0"
+  }
+}
