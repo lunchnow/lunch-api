@@ -63,10 +63,10 @@ low(adapter)
       console.log(parseResponse);
 
       if (!parseResponse.valid) {
-        return reply.send("Wrong arguments passed. Example: `/lunch-krakow 12:00 Mural Hindus`")
+        return reply.send("Wrong arguments passed. Example: `/lunch-krakow 12:00 Mural, Hindus`")
       }
 
-      if (true || !params.length) {
+      if (true || !parseResponse.params) {
         // TODO: filter by today
         const lunches = db.get('lunches').value();
         reply.send(messageFormatter.forSlack(lunches));
