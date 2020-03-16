@@ -6,6 +6,7 @@ const _ = require('lodash');
 
 const messageFormatter = require('./lib/messageFormatter');
 const slackParamsParser = require('./lib/slackParamsParser');
+const dbManager = require('./lib/dbManager');
 
 // DB
 const low = require('lowdb');
@@ -41,9 +42,8 @@ low(adapter)
     })
 
     fastify.get('/lunches', (request, reply) => {
-      const lunches = db.get('lunches').value();
-
-      postInSlack(lunches).then(lunches => reply.send({ lunches }));
+      postInSlack(dbManager.getTodaysLunches(db))
+        .then(lunches => reply.send({ lunches }));
     })
 
     fastify.post('/lunches', (request, reply) => {
@@ -57,19 +57,15 @@ low(adapter)
     })
 
     fastify.post('/slack', (request, reply) => {
-      console.log("BODY", request.body);
       const userName = request.body.user_name;
       const parseResponse = slackParamsParser.perform(request.body.text.trim());
-      console.log(parseResponse);
 
       if (!parseResponse.valid) {
         return reply.send("Wrong arguments passed. Example: `/lunch-krakow 12:00 Mural, Hindus`")
       }
 
       if (true || !parseResponse.params) {
-        // TODO: filter by today
-        const lunches = db.get('lunches').value();
-        reply.send(messageFormatter.forSlack(lunches));
+        reply.send(messageFormatter.forSlack(dbManager.getTodaysLunches(db)));
       } else {
         // TODO: write to db (username, hour, places)
         reply.send("NotImplementedError");
