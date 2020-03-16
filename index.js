@@ -47,11 +47,7 @@ low(adapter)
     })
 
     fastify.post('/lunches', (request, reply) => {
-      db.get('lunches')
-        .push(request.body)
-        .last()
-        .assign({ id: Date.now().toString() })
-        .write()
+      dbManager.insertLunch(db, request.body)
         .then(lunch => postInSlack([lunch]))
         .then(lunches => reply.send(lunches[0]))
     })
@@ -64,11 +60,11 @@ low(adapter)
         return reply.send("Wrong arguments passed. Example: `/lunch-krakow 12:00 Mural, Hindus`")
       }
 
-      if (true || !parseResponse.params) {
+      if (!parseResponse.params) {
         reply.send(messageFormatter.forSlack(dbManager.getTodaysLunches(db)));
       } else {
-        // TODO: write to db (username, hour, places)
-        reply.send("NotImplementedError");
+        dbManager.insertLunches(db, userName, parseResponse.params)
+          .then(lunches => reply.send(messageFormatter.forSlack(lunches)));
       }
     })
 
