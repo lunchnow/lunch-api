@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/lunchnow/lunch-api#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "fastify": "^2.12.1",
     "lowdb": "^1.0.0"
   }
